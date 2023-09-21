@@ -1,16 +1,16 @@
 import { asyncAction, createTypes } from '../utils/createActions';
 
 export const types = createTypes(
-  'pokedex/',
-  asyncAction('GET_POKEDEX'),
+  'catalag/',
+  asyncAction('GET_CATALAG'),
 );
 
-export const getPokedex = ({ offset, limit }: { offset: number; limit: number }) => {
+export const getPokedex = (payload: { offset: number; limit: number }) => {
   return {
-    types: [types.GET_POKEDEX_REQUEST, types.GET_POKEDEX_SUCCESS, types.GET_POKEDEX_FAIL],
+    types: [types.GET_CATALAG_REQUEST, types.GET_CATALAG_SUCCESS, types.GET_CATALAG_FAIL],
     promise: (api: any) =>
       api
-        .getPokedex({ offset, limit })
+        .getPokedex({ ...payload })
         .then((response: any) => {
           return response;
         })
