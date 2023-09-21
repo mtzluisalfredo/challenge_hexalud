@@ -19,7 +19,6 @@ const initialState = {
 
 export default (state = initialState, action: any) => {
   const { error, payload = {}, result = {} } = action;
-  console.log("TCLLLLLL", result?.results)
 
   const newState = {
     ...state,
@@ -45,7 +44,6 @@ export default (state = initialState, action: any) => {
 
   switch (action.type) {
     case GET_CATALAG_SUCCESS: {
-      console.log('Tod chido')
       return {
         ...newState,
         pokemonData: [...newState.pokemonData, ...result?.results],
