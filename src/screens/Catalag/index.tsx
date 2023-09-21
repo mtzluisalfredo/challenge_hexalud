@@ -1,29 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import { useActions } from '../../hooks/useActions';
-import * as actionsPokedex from '../../redux/actions/pokedex';
-
-const limit = 10; // Cantidad de resultados por página
+import * as actionsPokedex from '../../redux/actions/catalag';
+import { useSelector } from 'react-redux';
 interface Pokemon {
   name: string;
 }
 
 function Catalag() {
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const { getPokedex } = useActions(actionsPokedex);
-  const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [offset, setOffset] = useState<number>(0);
+  const { loading, limit, offset, pokemonData } = useSelector(({ catalag }: any) => {
+    return { ...catalag };
+  });
 
   const fetchPokemonData = async () => {
-    getPokedex({ limit, offset })
+    if (!isLoadingMore) {
+      setIsLoadingMore(true);
+      await getPokedex({ limit, offset });
+      setIsLoadingMore(false);
+    }
   };
-
   useEffect(() => {
     fetchPokemonData();
   }, []);
 
   const renderItem = ({ item }: { item: Pokemon }) => (
-    <View style={{ padding: 16 }}>
+    <View style={{ padding: 16, flex: 1, height: 100, backgroundColor: 'red' }}>
       <Text>{item.name}</Text>
     </View>
   );
@@ -43,9 +46,10 @@ function Catalag() {
     <FlatList
       data={pokemonData}
       renderItem={renderItem}
+      numColumns={2}
       keyExtractor={(item) => item.name}
-      onEndReached={fetchPokemonData}
       onEndReachedThreshold={0.1}
+      onEndReached={fetchPokemonData}
       ListFooterComponent={renderFooter}
     />
   );
