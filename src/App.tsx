@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'; // Importa PersistGate
-import { store, persistor } from './data/store'; // Importa tu store y persistor
+import { store, persistor } from './redux/store'; // Importa tu store y persistor
 
 import Navigation from './navigation';
 
