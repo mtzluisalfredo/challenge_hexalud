@@ -1,31 +1,23 @@
-import { types } from '../actions/catalag'
+import { types } from '../actions/pokedex'
 
 const loadingStates: string[] = [
-  types.GET_CATALAG_REQUEST
 ];
 
 const failureStates: string[] = [
-  types.GET_CATALAG_FAIL
 ];
 
-const { GET_CATALAG_SUCCESS } = types;
+const { SET_TO_POKEDEX } = types;
 
-interface CatalogState {
-  offset: number;
-  limit: number;
-  loading: boolean;
-  pokemons: any[];
+interface PokedexState {
+  myPokemons: any[];
 }
 
-const initialState: CatalogState = {
-  offset: 0,
-  limit: 10,
-  loading: false,
-  pokemons: []
+const initialState: PokedexState = {
+  myPokemons: []
 };
 
 export default (state = initialState, action: any) => {
-  const { error, result = {} } = action;
+  const { error, payload = {} } = action;
 
   const actionType: string = action?.type;
 
@@ -52,12 +44,10 @@ export default (state = initialState, action: any) => {
   }
 
   switch (actionType) {
-    case GET_CATALAG_SUCCESS: {
+    case SET_TO_POKEDEX: {
       return {
         ...newState,
-        pokemons: [...newState.pokemons, ...result?.results],
-        offset: newState.offset + 1,
-        loading: false,
+        myPokemons: [...newState.myPokemons, payload],
       };
     }
     default:
