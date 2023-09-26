@@ -14,7 +14,7 @@ const initialState = {
   offset: 0,
   limit: 10,
   loading: false,
-  pokemonData: []
+  pokemons: []
 };
 
 export default (state = initialState, action: any) => {
@@ -46,7 +46,7 @@ export default (state = initialState, action: any) => {
     case GET_CATALAG_SUCCESS: {
       return {
         ...newState,
-        pokemonData: [...newState.pokemonData, ...result?.results],
+        pokemons: [...newState.pokemons, ...result?.results],
         offset: newState.offset + 1,
         loading: false,
       };

@@ -1,56 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { FlatList, View, Text } from 'react-native';
 import { useActions } from '../../hooks/useActions';
 import * as actionsPokedex from '../../redux/actions/catalag';
 import { useSelector } from 'react-redux';
-interface Pokemon {
-  name: string;
-}
+import { PokemonCard } from '../../components';
+import { getIdComponent } from '../../helpers';
 
 function Catalag() {
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const { getPokedex } = useActions(actionsPokedex);
-  const { loading, limit, offset, pokemonData } = useSelector(({ catalag }: any) => {
+  const { limit, offset, pokemons } = useSelector(({ catalag }: any) => {
     return { ...catalag };
   });
 
-  const fetchPokemonData = async () => {
-    if (!isLoadingMore) {
-      setIsLoadingMore(true);
-      await getPokedex({ limit, offset });
-      setIsLoadingMore(false);
-    }
+  const fetchpokemons = async () => {
+    await getPokedex({ limit, offset });
   };
+
   useEffect(() => {
-    fetchPokemonData();
+    fetchpokemons();
   }, []);
-
-  const renderItem = ({ item }: { item: Pokemon }) => (
-    <View style={{ padding: 16, flex: 1, height: 100, backgroundColor: 'red' }}>
-      <Text>{item.name}</Text>
-    </View>
-  );
-
-  const renderFooter = () => {
-    if (loading) {
-      return (
-        <View style={{ padding: 16 }}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      );
-    }
-    return null;
-  };
 
   return (
     <FlatList
-      data={pokemonData}
-      renderItem={renderItem}
+      data={pokemons}
+      renderItem={({item}) => <PokemonCard item={item} />}
       numColumns={2}
-      keyExtractor={(item) => item.name}
-      onEndReachedThreshold={0.1}
-      onEndReached={fetchPokemonData}
-      ListFooterComponent={renderFooter}
+      keyExtractor={() => getIdComponent()}
     />
   );
 }
