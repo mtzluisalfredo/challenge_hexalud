@@ -40,7 +40,6 @@ export const getPokemonById = (pokemonId:  number | string ) => {
       api
         .getPokemonById(pokemonId)
         .then((response: any) => {
-          console.log("🚀 ~ file: catalag.ts:31 ~ .then ~ response:", response)
           return response;
         })
         .catch((error: any) => {

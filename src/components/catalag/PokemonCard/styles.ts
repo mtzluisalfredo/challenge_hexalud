@@ -9,8 +9,6 @@ export const styles = StyleSheet.create({
   wrapper: {
     padding: 16,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginVertical: 8,
     marginHorizontal: 16,
     backgroundColor: 'white',
@@ -22,6 +20,10 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  card: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     width: 100,

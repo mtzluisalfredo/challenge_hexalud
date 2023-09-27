@@ -1,6 +1,6 @@
 export function getIdPokemon(url: string) {
   const regex = /pokemon\/(\d+)\//;
-  const match = url.match(regex);
+  const match = url?.match(regex);
 
   if (match && match[1]) {
     return parseInt(match[1], 10); // Devuelve el número de Pokémon como un entero

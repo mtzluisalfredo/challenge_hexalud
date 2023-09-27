@@ -5,32 +5,45 @@ import * as actionsPokedex from '../../redux/actions/catalag';
 import { useSelector } from 'react-redux';
 import { LoadingFooter, PokemonCard } from '../../components';
 import { getIdComponent } from '../../helpers';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Pokemon } from '../../components/catalag/PokemonCard';
+
+type RootStackParamList = {
+  PokemonDetail: { pokemon: any }; // replace 'any' with the actual type of your pokemon
+  // add other screens here
+};
 
 function Catalag() {
   const { getPokedex } = useActions(actionsPokedex);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'PokemonDetail'>>();
   const { limit, pokemons, loading } = useSelector(({ catalag }: any) => {
     return { ...catalag };
   });
 
-  const [offset, setOffset] = useState(0); // Nuevo estado para el offset
+  const [offset, setOffset] = useState(0);
 
   const fetchpokemons = async () => {
     await getPokedex({ limit, offset });
-    setOffset(offset + limit); // Incrementa el offset después de cada carga
+    setOffset(offset + limit);
   };
 
   useEffect(() => {
     fetchpokemons();
   }, []);
 
+  const handleGoToDetail = (item: Pokemon) => {
+    navigation.navigate('PokemonDetail', { pokemon: item })
+  }
+
   return (
     <FlatList
       data={pokemons}
-      renderItem={({item}) => <PokemonCard item={item} />}
+      renderItem={({ item }) => <PokemonCard onPress={() => handleGoToDetail(item)} item={item} />}
       numColumns={2}
       keyExtractor={() => getIdComponent()}
-      onEndReached={fetchpokemons} // Carga más datos cuando se llega al final de la lista
-      onEndReachedThreshold={0.5} // Llama a onEndReached cuando el final de los datos cargados está a la mitad de la pantalla
+      onEndReached={fetchpokemons}
+      onEndReachedThreshold={0.5}
       ListFooterComponent={() => <LoadingFooter loading={loading} />}
     />
   );

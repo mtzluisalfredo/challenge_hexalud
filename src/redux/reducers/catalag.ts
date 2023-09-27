@@ -8,24 +8,26 @@ const failureStates: string[] = [
   types.GET_CATALAG_FAIL
 ];
 
-const { GET_CATALAG_SUCCESS } = types;
+const { GET_CATALAG_SUCCESS, GET_POKEMON_SUCCESS } = types;
 
 interface CatalogState {
-  offset: number;
+
   limit: number;
   loading: boolean;
   pokemons: any[];
+  pokemon_detail: any;
 }
 
 const initialState: CatalogState = {
-  offset: 0,
   limit: 10,
   loading: false,
-  pokemons: []
+  pokemons: [],
+  pokemon_detail: null
 };
 
 export default (state = initialState, action: any) => {
   const { error, result = {} } = action;
+  console.log("🚀 ~ file: catalag.ts:30 ~ action:", action)
 
   const actionType: string = action?.type;
 
@@ -56,7 +58,13 @@ export default (state = initialState, action: any) => {
       return {
         ...newState,
         pokemons: [...newState.pokemons, ...result?.results],
-        offset: newState.offset + 1,
+        loading: false,
+      };
+    }
+    case GET_POKEMON_SUCCESS: {
+      return {
+        ...newState,
+        pokemon_detail: { ...result },
         loading: false,
       };
     }
