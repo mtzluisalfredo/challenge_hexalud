@@ -1,56 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { FlatList } from 'react-native';
 import { useActions } from '../../hooks/useActions';
 import * as actionsPokedex from '../../redux/actions/catalag';
 import { useSelector } from 'react-redux';
-interface Pokemon {
-  name: string;
-}
+import { LoadingFooter, PokemonCard } from '../../components';
+import { getIdComponent } from '../../helpers';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Pokemon } from '../../components/catalag/PokemonCard';
+
+type RootStackParamList = {
+  PokemonDetail: { pokemon: any }; // replace 'any' with the actual type of your pokemon
+  // add other screens here
+};
 
 function Catalag() {
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const { getPokedex } = useActions(actionsPokedex);
-  const { loading, limit, offset, pokemonData } = useSelector(({ catalag }: any) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'PokemonDetail'>>();
+  const { limit, pokemons, loading } = useSelector(({ catalag }: any) => {
     return { ...catalag };
   });
 
-  const fetchPokemonData = async () => {
-    if (!isLoadingMore) {
-      setIsLoadingMore(true);
-      await getPokedex({ limit, offset });
-      setIsLoadingMore(false);
-    }
+  const [offset, setOffset] = useState(0);
+
+  const fetchpokemons = async () => {
+    await getPokedex({ limit, offset });
+    setOffset(offset + limit);
   };
+
   useEffect(() => {
-    fetchPokemonData();
+    fetchpokemons();
   }, []);
 
-  const renderItem = ({ item }: { item: Pokemon }) => (
-    <View style={{ padding: 16, flex: 1, height: 100, backgroundColor: 'red' }}>
-      <Text>{item.name}</Text>
-    </View>
-  );
-
-  const renderFooter = () => {
-    if (loading) {
-      return (
-        <View style={{ padding: 16 }}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      );
-    }
-    return null;
-  };
+  const handleGoToDetail = (item: Pokemon) => {
+    navigation.navigate('PokemonDetail', { pokemon: item })
+  }
 
   return (
     <FlatList
-      data={pokemonData}
-      renderItem={renderItem}
+      data={pokemons}
+      renderItem={({ item }) => <PokemonCard onPress={() => handleGoToDetail(item)} item={item} />}
       numColumns={2}
-      keyExtractor={(item) => item.name}
-      onEndReachedThreshold={0.1}
-      onEndReached={fetchPokemonData}
-      ListFooterComponent={renderFooter}
+      keyExtractor={() => getIdComponent()}
+      onEndReached={fetchpokemons}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={() => <LoadingFooter loading={loading} />}
     />
   );
 }
