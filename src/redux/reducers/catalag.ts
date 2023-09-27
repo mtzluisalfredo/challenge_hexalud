@@ -19,7 +19,7 @@ interface CatalogState {
 }
 
 const initialState: CatalogState = {
-  limit: 10,
+  limit: 20,
   loading: false,
   pokemons: [],
   pokemon_detail: null
