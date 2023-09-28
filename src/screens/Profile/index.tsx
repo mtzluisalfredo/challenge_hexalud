@@ -1,12 +1,21 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import ProfileComponent from '../../components/ProfileComponent';
 
 const Profile = () => {
   return (
-    <View>
-      <Text>sdfsdf</Text>
+    <View style={styles.container}>
+      <ProfileComponent />
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default Profile;
