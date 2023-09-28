@@ -5,23 +5,16 @@ import { getIdPokemon } from '../../helpers';
 import { useActions } from '../../hooks/useActions';
 import { useSelector } from 'react-redux';
 
-
-
 const PokemonDetail = ({ route }: any) => {
   const { getPokemonById } = useActions(actionsPokedex);
-
-
-
   const { pokemon_detail, loading } = useSelector(({ catalag }: any) => {
     return { ...catalag };
   });
-
 
   useEffect(() => {
     const urlPokemon = route?.params?.pokemon?.url;
     const idPokemon = getIdPokemon(urlPokemon);
     getPokemonById(idPokemon)
-
   }, [route.params]);
 
   if (loading) {
@@ -32,7 +25,7 @@ const PokemonDetail = ({ route }: any) => {
     );
   }
 
-  if (!pokemon_detail) {
+  if (!pokemon_detail && !loading) {
     return (
       <View style={styles.errorContainer}>
         <Text>Error al cargar los datos del Pokémon.</Text>
@@ -88,6 +81,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 10,
   },
   loadingContainer: {
     flex: 1,
@@ -102,19 +97,27 @@ const styles = StyleSheet.create({
   image: {
     width: 150,
     height: 150,
+    borderRadius: 75,
+    marginBottom: 20,
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 10,
+    color: '#333',
   },
   info: {
     fontSize: 16,
     marginBottom: 5,
+    color: '#666',
   },
   evaluationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
   },
   evaluationImage: {
     width: 24,
@@ -123,6 +126,7 @@ const styles = StyleSheet.create({
   },
   evaluationText: {
     fontSize: 14,
+    color: '#333',
   },
 });
 

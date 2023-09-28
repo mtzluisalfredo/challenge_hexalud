@@ -10,7 +10,7 @@ export function getIdPokemon(url: string) {
 }
 
 export function getUrlImagePokemon(url: string) {
-  if(!url) {
+  if (!url) {
     return ''
   }
 
